@@ -18,15 +18,11 @@ if [[ -z $USER_ID ]]; then
     "SELECT user_id FROM users WHERE username='$USERNAME';"
   )
 else
-  GAMES_PLAYED=$(
-    psql --username=freecodecamp --dbname=number_guess --tuples-only --no-align -c \
-    "SELECT games_played FROM users WHERE username='$USERNAME';"
-  )
+  GAMES_PLAYED=$(psql --username=freecodecamp --dbname=number_guess --tuples-only --no-align -c \
+  "SELECT games_played FROM users WHERE username='$USERNAME';" | xargs)
 
-  BEST_GAME=$(
-    psql --username=freecodecamp --dbname=number_guess --tuples-only --no-align -c \
-    "SELECT best_game FROM users WHERE username='$USERNAME';"
-  )
+  BEST_GAME=$(psql --username=freecodecamp --dbname=number_guess --tuples-only --no-align -c \
+  "SELECT best_game FROM users WHERE username='$USERNAME';" | xargs)
 
   echo "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
 fi
@@ -39,7 +35,7 @@ echo "Guess the secret number between 1 and 1000:"
 while true; do
   read GUESS
 
-  if ! [[ $GUESS =~ ^[0-9]+$ ]]; then
+  if [[ ! $GUESS =~ ^[0-9]+$ ]]; then
     echo "That is not an integer, guess again:"
     continue
   fi
@@ -61,7 +57,7 @@ while true; do
 
     CURRENT_BEST=$(
       psql --username=freecodecamp --dbname=number_guess --tuples-only --no-align -c \
-      "SELECT best_game FROM users WHERE user_id = $USER_ID;"
+      "SELECT best_game FROM users WHERE user_id = $USER_ID;" | xargs
     )
 
     if [[ -z $CURRENT_BEST || $NUMBER_OF_GUESSES -lt $CURRENT_BEST ]]; then
