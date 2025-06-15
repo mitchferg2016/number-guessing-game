@@ -24,7 +24,7 @@ else
   BEST_GAME=$(psql --username=freecodecamp --dbname=number_guess --tuples-only --no-align -c \
   "SELECT best_game FROM users WHERE username='$USERNAME';" | xargs)
 
-echo "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
+  printf "Welcome back, %s! You have played %s games, and your best game took %s guesses.\n" "$USERNAME" "$GAMES_PLAYED" "$BEST_GAME"
 fi
 
 SECRET_NUMBER=$(( RANDOM % 1000 + 1 ))
